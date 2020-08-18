@@ -7,3 +7,4 @@ requests
 redis
 python-dateutil
 flent
+prometheus_api_client

@@ -9,7 +9,8 @@ rm -rf ripsaw
 git clone https://github.com/cloud-bulldozer/ripsaw.git --depth 1
 
 # Generate uuid
-UUID=$(uuidgen)
+NEW_UUID=$(uuidgen)
+UUID=${NEW_UUID%-*}
 
 if [[ $ghprbPullLongDescription = *"Depends-On:"* ]]; then
   ripsaw_change_id="$(echo -e $ghprbPullLongDescription | sed -n -e 's/^.*Depends-On: //p' | dos2unix)"
@@ -20,18 +21,13 @@ if [[ $ghprbPullLongDescription = *"Depends-On:"* ]]; then
   cd ..
 fi
 
-pushd ripsaw
-update_operator_image
-popd
-
 cd ripsaw
 sed -i "s/ES_SERVER/$ES_SERVER/g" tests/test_crs/*
 sed -i "s/ES_PORT/$ES_PORT/g" tests/test_crs/*
 sed -i "s/my-ripsaw/my-ripsaw-$UUID/g" `grep -Rl my-ripsaw`
 sed -i "s/sql-server/sql-server-$UUID/g" tests/mssql.yaml tests/test_crs/valid_hammerdb.yaml tests/test_hammerdb.sh
+update_operator_image
 cd ..
-
-sed -i "s/my-ripsaw/my-ripsaw-$UUID/g" ci/common.sh
 
 # Podman image prune
 podman image prune -a -f 
@@ -63,6 +59,8 @@ fi
 
 echo -e "Running tests in the following directories:\n${test_list}"
 test_rc=0
+
+sed -i "s/my-ripsaw/my-ripsaw-$UUID/g" ci/common.sh
 
 wait_clean
 

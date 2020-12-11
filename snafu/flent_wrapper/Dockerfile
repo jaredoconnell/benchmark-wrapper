@@ -29,6 +29,6 @@ RUN pip3 install flent
 COPY --from=builder /tmp/install /
 
 # Add snafu
-#RUN mkdir -p /opt/snafu/
-#COPY . /opt/snafu/
-#RUN pip3 install -e /opt/snafu/
+RUN mkdir -p /opt/snafu/
+COPY . /opt/snafu/
+RUN pip3 install -e /opt/snafu/

@@ -30,5 +30,5 @@ COPY --from=builder /tmp/install /
 
 # Add snafu
 RUN mkdir -p /opt/snafu/
-COPY . /opt/snafu/
-RUN pip3 install -e /opt/snafu/
+#COPY . /opt/snafu/
+#RUN pip3 install -e /opt/snafu/
